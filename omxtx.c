@@ -278,14 +278,14 @@ static void dumpport(OMX_HANDLETYPE handle, int port)
 
 
 
-static int mapcodec(enum CodecID id)
+static int mapcodec(enum AVCodecID id)
 {
 	printf("Mapping codec ID %d (%x)\n", id, id);
 	switch (id) {
-		case	CODEC_ID_MPEG2VIDEO:
-		case	CODEC_ID_MPEG2VIDEO_XVMC:
+		case	AV_CODEC_ID_MPEG2VIDEO:
+		case	AV_CODEC_ID_MPEG2VIDEO_XVMC:
 			return OMX_VIDEO_CodingMPEG2;
-		case	CODEC_ID_H264:
+		case	AV_CODEC_ID_H264:
 			return OMX_VIDEO_CodingAVC;
 		case	8:
 			return OMX_VIDEO_CodingMJPEG;
@@ -375,7 +375,7 @@ static AVFormatContext *makeoutputcontext(AVFormatContext *ic,
 	for (i = 0; i < ic->nb_streams; i++) {
 		iflow = ic->streams[i];
 		if (i == idx) {	/* My new H.264 stream. */
-			c = avcodec_find_encoder(CODEC_ID_H264);
+			c = avcodec_find_encoder(AV_CODEC_ID_H264);
 			ctx.outindex[i] = streamindex++;
 printf("Found a codec at %p\n", c);
 			oflow = avformat_new_stream(oc, c);
@@ -383,7 +383,7 @@ printf("Defaults: output stream: %d/%d, input stream: %d/%d, input codec: %d/%d,
 			cc = oflow->codec;
 			cc->width = viddef->nFrameWidth;
 			cc->height = viddef->nFrameHeight;
-			cc->codec_id = CODEC_ID_H264;
+			cc->codec_id = AV_CODEC_ID_H264;
 			cc->codec_type = AVMEDIA_TYPE_VIDEO;
 			cc->bit_rate = ctx.bitrate;
 			cc->profile = FF_PROFILE_H264_HIGH;
@@ -1382,7 +1382,7 @@ int main(int argc, char *argv[])
 
 	printf("Frame size: %dx%d\n", ic->streams[vidindex]->codec->width, 
 		ic->streams[vidindex]->codec->height);
-	ish264 = (ic->streams[vidindex]->codec->codec_id == CODEC_ID_H264);
+	ish264 = (ic->streams[vidindex]->codec->codec_id == AV_CODEC_ID_H264);
 
 	/* Output init: */
 #if 0
